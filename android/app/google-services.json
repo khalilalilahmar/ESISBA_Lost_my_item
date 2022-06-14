@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1039034191392",
+    "firebase_url": "https://esi-lost-my-item-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "esi-lost-my-item",
+    "storage_bucket": "esi-lost-my-item.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039034191392:android:695cbd7471917db2fa3645",
+        "android_client_info": {
+          "package_name": "com.example.esi_lost_my_item"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1039034191392-4vgvu5pu08m3v40hj5g7hu4tp1kj3pou.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.esi_lost_my_item",
+            "certificate_hash": "4bf2a2f5b31180ea56f91a536c01f7110b6f11b9"
+          }
+        },
+        {
+          "client_id": "1039034191392-husbfjl2m0cbt4e5tk8oc50o5l7q17ou.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwkeBHv5feMFQPYDsOZEDC8Q2BOV-z-Dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1039034191392-husbfjl2m0cbt4e5tk8oc50o5l7q17ou.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
