@@ -13,7 +13,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../controllers/auth_controller.dart';
 import 'custom_navigation_bar.dart';
 import 'lostItem.dart';
@@ -103,18 +102,27 @@ class _HomePageState extends State<HomePage> {
                   AutoSizeText(
                     "Welcome back ${AuthController.controller.auth!.currentUser!.displayName!}",
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: textcolor),
                     maxLines: 1,
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.network(
-                      AuthController.controller.auth!.currentUser!.photoURL!,
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
+                  InkWell(                    onLongPress: ()async {if(await confirm(context,title: Text("Logout confirmation ?")
+
+                    )){
+                      await AuthController.controller.auth!.signOut();
+                      await GoogleSignIn().signOut();
+                    }
+
+                      },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.network(
+                        AuthController.controller.auth!.currentUser!.photoURL!,
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   )
                 ],
@@ -215,7 +223,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ]),
-      Container (
+      Container(
         color: textcolor,
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.all(16),
@@ -366,50 +374,52 @@ class _HomePageState extends State<HomePage> {
                                       SizedBox(
                                         height: 8,
                                       ),
-                                      Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          padding: const EdgeInsets
-                                              .fromLTRB(
-                                              10, 0, 10, 0),
-                                          child: ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor:
-                                                MaterialStateProperty
-                                                    .all(Color
-                                                    .fromARGB(
-                                                    255,
-                                                    0,
-                                                    101,
-                                                    255)),
-                                                shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                      borderRadius:
-                                                      BorderRadius
-                                                          .circular(
-                                                          30.0),
-                                                    ))),
-                                            child: const Text(
-                                              'I found my item',
-                                              style: TextStyle(
-                                                fontWeight:
-                                                FontWeight.bold,
-                                                fontSize: 16,
+                                      if (AuthController.controller.auth!
+                                              .currentUser!.uid ==
+                                          ItemsController.controller
+                                              .lostItemList[index].user.id)
+                                        Container(
+                                            height: 50,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10, 0, 10, 0),
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Color.fromARGB(255, 0,
+                                                              101, 255)),
+                                                  shape: MaterialStateProperty
+                                                      .all<RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.0),
+                                                  ))),
+                                              child: const Text(
+                                                'I found my item',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
                                               ),
-                                            ),
-                                            onPressed: () async {
-                                              if (await confirm(context)) {
-                                                await FirebaseDatabase.instance
-                                                    .ref()
-                                                    .child("lostItems").child(ItemsController
-                                                    .controller
-                                                    .lostItemList[index].id).remove();
-                                                return print('pressedOK');
-                                              }
-                                              else{  return print('pressedCancel');}
-                                            },
-                                          )),
+                                              onPressed: () async {
+                                                if (await confirm(context)) {
+                                                  await FirebaseDatabase
+                                                      .instance
+                                                      .ref()
+                                                      .child("lostItems")
+                                                      .child(ItemsController
+                                                          .controller
+                                                          .lostItemList[index]
+                                                          .id)
+                                                      .remove();
+                                                  return print('pressedOK');
+                                                } else {
+                                                  return print('pressedCancel');
+                                                }
+                                              },
+                                            )),
                                     ],
                                   )
                                 : Column(
@@ -572,50 +582,52 @@ class _HomePageState extends State<HomePage> {
                                       SizedBox(
                                         height: 8,
                                       ),
-                                      Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          padding: const EdgeInsets
-                                              .fromLTRB(
-                                              10, 0, 10, 0),
-                                          child: ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor:
-                                                MaterialStateProperty
-                                                    .all(Color
-                                                    .fromARGB(
-                                                    255,
-                                                    0,
-                                                    101,
-                                                    255)),
-                                                shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                      borderRadius:
-                                                      BorderRadius
-                                                          .circular(
-                                                          30.0),
-                                                    ))),
-                                            child: const Text(
-                                              'I found my item',
-                                              style: TextStyle(
-                                                fontWeight:
-                                                FontWeight.bold,
-                                                fontSize: 16,
+                                      if (AuthController.controller.auth!
+                                              .currentUser!.uid ==
+                                          ItemsController.controller
+                                              .lostItemList[index].user.id)
+                                        Container(
+                                            height: 50,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10, 0, 10, 0),
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Color.fromARGB(255, 0,
+                                                              101, 255)),
+                                                  shape: MaterialStateProperty
+                                                      .all<RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.0),
+                                                  ))),
+                                              child: const Text(
+                                                'I found my item',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
                                               ),
-                                            ),
-                                            onPressed: () async {
-                                              if (await confirm(context)) {
-                                                await FirebaseDatabase.instance
-                                                    .ref()
-                                                    .child("lostItems").child(ItemsController
-                                                    .controller
-                                                    .lostItemList[index].id).remove();
-                                                return print('pressedOK');
-                                              }
-                                              else{  return print('pressedCancel');}
-                                            },
-                                          )),
+                                              onPressed: () async {
+                                                if (await confirm(context)) {
+                                                  await FirebaseDatabase
+                                                      .instance
+                                                      .ref()
+                                                      .child("lostItems")
+                                                      .child(ItemsController
+                                                          .controller
+                                                          .lostItemList[index]
+                                                          .id)
+                                                      .remove();
+                                                  return print('pressedOK');
+                                                } else {
+                                                  return print('pressedCancel');
+                                                }
+                                              },
+                                            )),
                                     ],
                                   )),
                       ),
@@ -766,50 +778,50 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 8,
                                 ),
-                                Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    padding: const EdgeInsets
-                                        .fromLTRB(
-                                        10, 0, 10, 0),
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                          MaterialStateProperty
-                                              .all(Color
-                                              .fromARGB(
-                                              255,
-                                              0,
-                                              101,
-                                              255)),
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(
-                                                    30.0),
-                                              ))),
-                                      child: const Text(
-                                        'I found the owner',
-                                        style: TextStyle(
-                                          fontWeight:
-                                          FontWeight.bold,
-                                          fontSize: 16,
+                                if (AuthController
+                                        .controller.auth!.currentUser!.uid ==
+                                    ItemsController.controller
+                                        .foundItemList[index].user.id)
+                                  Container(
+                                      height: 50,
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 0, 10, 0),
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Color.fromARGB(
+                                                        255, 0, 101, 255)),
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0),
+                                            ))),
+                                        child: const Text(
+                                          'I found the owner',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
                                         ),
-                                      ),
-                                      onPressed: () async {
-                                        if (await confirm(context)) {
-                                          await FirebaseDatabase.instance
-                                              .ref()
-                                              .child("lostItems").child(ItemsController
-                                              .controller
-                                              .lostItemList[index].id).remove();
-                                          return print('pressedOK');
-                                        }
-                                        else{  return print('pressedCancel');}
-                                      },
-                                    )),
+                                        onPressed: () async {
+                                          if (await confirm(context)) {
+                                            await FirebaseDatabase.instance
+                                                .ref()
+                                                .child("foundItems")
+                                                .child(ItemsController
+                                                    .controller
+                                                    .foundItemList[index]
+                                                    .id)
+                                                .remove();
+                                            return print('pressedOK');
+                                          } else {
+                                            return print('pressedCancel');
+                                          }
+                                        },
+                                      )),
                               ],
                             )),
                       ),

@@ -40,6 +40,7 @@ class ItemsController extends GetxController {
           carImg.add(child.value.toString());
         }
         AppUser user = AppUser(
+            child.child("user").value.toString(),
             es.child("email").value.toString(),
             es.child("name").value.toString(),
             es.child("profileImage").value.toString());
@@ -86,6 +87,7 @@ class ItemsController extends GetxController {
           carImg.add(child.value.toString());
         }
         AppUser user = AppUser(
+            child.child("user").value.toString(),
             es.child("email").value.toString(),
             es.child("name").value.toString(),
             es.child("profileImage").value.toString());
