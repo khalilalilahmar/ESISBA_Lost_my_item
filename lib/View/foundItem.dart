@@ -99,6 +99,8 @@ class _FoundItemState extends State<FoundItem> {
                         height: 10,
                       ),
                       TextFormField(
+                        minLines: 3,
+                        maxLines: 4,
                         controller: name,autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator:  (value) => value!.isEmpty ? 'Object description cannot be blank' : null,
                         decoration: InputDecoration(
@@ -128,7 +130,7 @@ class _FoundItemState extends State<FoundItem> {
                           onPressed: () {
                             DatePicker.showDateTimePicker(context,
                                 showTitleActions: true,
-                                minTime: DateTime(1900, 3, 5),
+                                minTime: DateTime(2022, 3, 5),
                                 maxTime: DateTime.now(),
                                 theme: DatePickerTheme(
                                   // headerColor: Colors.black,
@@ -150,8 +152,7 @@ class _FoundItemState extends State<FoundItem> {
                                         .format(date);
                                   });
                                 },
-                                currentTime: DateTime.now()
-                                    .subtract(Duration(days: 6570)),
+                                currentTime: DateTime.now(),
                                 locale: LocaleType.en);
                           },
                           style: ButtonStyle(
@@ -314,7 +315,8 @@ class _FoundItemState extends State<FoundItem> {
                                 'name':name.text.trim(),
                                 'time':selectedDate,
                                 'picsUrl':imgUrl,
-                                'user':AuthController.controller.auth!.currentUser!.uid
+                                'user':AuthController.controller.auth!.currentUser!.uid,
+                                'createdAt':DateTime.now().toString()
                               };
                               await ref.update(map);
 
@@ -322,7 +324,7 @@ class _FoundItemState extends State<FoundItem> {
                               isLoading=false;
                             }); Get.back();
                             Get.rawSnackbar(
-                                message: "Your items has been added successfully to the found item list",
+                                message: "Your item has been added successfully to the found item list",
                                 borderRadius: 20,
                                 margin: EdgeInsets.all(5),
                                 backgroundColor: Colors.green);  }

@@ -1,4 +1,5 @@
 import 'package:esi_lost_my_item/View/homePage.dart';
+import 'package:esi_lost_my_item/controllers/items_controllers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +27,11 @@ class AuthController extends GetxController {
     if (user == null) {
       Get.offAll(()=>LoginScreen());
     } else {
+      Get.put(ItemsController());
+
       Get.offAll(()=>HomePage());
+      ItemsController.controller.getFoundItems();
+      ItemsController.controller.getLostItems();
       print("LOGGED IN");
     }
   }

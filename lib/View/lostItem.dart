@@ -30,9 +30,10 @@ class _LostItemState extends State<LostItem> {
   TextEditingController place = TextEditingController();
   GlobalKey<FormState> key = GlobalKey<FormState>();
   bool isLoading = false;
-   var index = 0;
-   var progress = 0.0;
+  var index = 0;
+  var progress = 0.0;
   List<String> imgUrl = [];
+
   Future uploadImages(int a, File file) async {
     index = a;
     UploadTask task = FirebaseStorage.instance
@@ -44,11 +45,9 @@ class _LostItemState extends State<LostItem> {
     task.snapshotEvents.listen((event) {
       progress =
           ((event.bytesTransferred.toDouble() / event.totalBytes.toDouble()) *
-              100)
+                  100)
               .roundToDouble();
-      setState(() {
-
-      });
+      setState(() {});
       print(progress);
     });
     await task.whenComplete(() async {
@@ -99,8 +98,13 @@ class _LostItemState extends State<LostItem> {
                         height: 10,
                       ),
                       TextFormField(
-                        controller: name,autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator:  (value) => value!.isEmpty ? 'Object description cannot be blank' : null,
+                        controller: name,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value!.isEmpty
+                            ? 'Object description cannot be blank'
+                            : null,
+                        minLines: 3,
+                        maxLines: 4,
                         decoration: InputDecoration(
                             hintText: "EX: Man Watch",
                             isDense: true,
@@ -122,7 +126,10 @@ class _LostItemState extends State<LostItem> {
                       ),
                       TextFormField(
                         controller: place,
-                        validator:  (value) => value!.isEmpty ? 'Object last seen cannot be blank' : null,autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value!.isEmpty
+                            ? 'Object last seen cannot be blank'
+                            : null,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
                             hintText: "EX: School library",
                             isDense: true,
@@ -149,7 +156,7 @@ class _LostItemState extends State<LostItem> {
                           onPressed: () {
                             DatePicker.showDateTimePicker(context,
                                 showTitleActions: true,
-                                minTime: DateTime(1900, 3, 5),
+                                minTime: DateTime(2022, 3, 5),
                                 maxTime: DateTime.now(),
                                 theme: DatePickerTheme(
                                     // headerColor: Colors.black,
@@ -171,8 +178,7 @@ class _LostItemState extends State<LostItem> {
                                     .format(date);
                               });
                             },
-                                currentTime: DateTime.now()
-                                    .subtract(Duration(days: 6570)),
+                                currentTime: DateTime.now(),
                                 locale: LocaleType.en);
                           },
                           style: ButtonStyle(
@@ -259,98 +265,101 @@ class _LostItemState extends State<LostItem> {
                                         ))
                                     .toList(),
                               )),
-                      isLoading ?
-                      Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: LiquidCircularProgressIndicator(
-                                value: progress / 100,
-                                // Defaults to 0.5.
-                                valueColor:
-                                AlwaysStoppedAnimation(Colors.blue),
-                                // Defaults to the current Theme's accentColor.
-                                backgroundColor: Colors.white,
-                                // Defaults to the current Theme's backgroundColor.
-                                borderColor: Colors.green,
-                                borderWidth: 5.0,
-                                direction: Axis.vertical,
-                                // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
-                                center: Text(
-                                    "${progress} %",
+                      isLoading
+                          ? Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: LiquidCircularProgressIndicator(
+                                      value: progress / 100,
+                                      // Defaults to 0.5.
+                                      valueColor:
+                                          AlwaysStoppedAnimation(Colors.blue),
+                                      // Defaults to the current Theme's accentColor.
+                                      backgroundColor: Colors.white,
+                                      // Defaults to the current Theme's backgroundColor.
+                                      borderColor: Colors.green,
+                                      borderWidth: 5.0,
+                                      direction: Axis.vertical,
+                                      // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
+                                      center: Text("${progress} %",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black)),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Uploading Images ${index}/${images.length}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black)),
+                                        color: textcolor),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Align(
+                              alignment: Alignment.center,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape:
+                                      MaterialStateProperty.all<OutlinedBorder>(
+                                          RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  )),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.green.shade400),
+                                ),
+                                onPressed: () async {
+                                  if (key.currentState!.validate()) {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    for (int i = 1; i <= images.length; i++) {
+                                      await uploadImages(
+                                          i, File(images[i - 1].path));
+                                    }
+                                    Map<String, dynamic> map = {
+                                      'name': name.text.trim(),
+                                      'place': place.text.trim(),
+                                      'time': selectedDate,
+                                      'picsUrl': imgUrl,
+                                      'createdAt': DateTime.now().toString(),
+                                      'user': AuthController
+                                          .controller.auth!.currentUser!.uid
+                                    };
+                                    await ref.update(map);
+
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    Get.back();
+                                    Get.rawSnackbar(
+                                        message:
+                                            "Your items has been added successfully to the lost item list",
+                                        borderRadius: 20,
+                                        margin: EdgeInsets.all(5),
+                                        backgroundColor: Colors.green);
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 50, vertical: 15),
+                                  child: Text(
+                                    "Submit",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Uploading Images ${index}/${images.length}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: textcolor),
-                            )
-                          ],
-                        ),
-                      )
-                          : Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                )),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.green.shade400),
-                          ),
-                          onPressed: () async {
-                            if (key.currentState!
-                                .validate()){
-                              setState(() {
-                                isLoading=true;
-                              });
-                              for (int i = 1;
-                              i <= images.length;
-                              i++) {
-                                await uploadImages(
-                                    i, File(images[i - 1].path));
-                              }
-                              Map<String,dynamic> map ={
-                                'name':name.text.trim(),
-                                'place':place.text.trim(),
-                                'time':selectedDate,
-                                'picsUrl':imgUrl,
-                                'user':AuthController.controller.auth!.currentUser!.uid
-                              };
-                              await ref.update(map);
-
-                            setState(() {
-                              isLoading=false;
-                            }); Get.back();
-                            Get.rawSnackbar(
-                                message: "Your items has been added successfully to the lost item list",
-                                borderRadius: 20,
-                                margin: EdgeInsets.all(5),
-                                backgroundColor: Colors.green);
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 50, vertical: 15),
-                            child: Text(
-                              "Submit",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   )
                 ],
